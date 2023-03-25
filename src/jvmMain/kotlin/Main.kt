@@ -16,7 +16,6 @@ import presentation.BaseOutlinedTextField
 @Composable
 @Preview
 fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
 
     var tradeAmount by remember { mutableStateOf(0.00f) }
     var riskAmount by remember { mutableStateOf(0.00f) }
@@ -27,6 +26,7 @@ fun App() {
     var targetPrice by remember { mutableStateOf(0.00f) }
 
     var rNumber by remember { mutableStateOf(0.00f) }
+    var numberOfShares by remember { mutableStateOf(0.00f) }
 
     var showResult by remember { mutableStateOf(false) }
 
@@ -52,7 +52,9 @@ fun App() {
             ) {
                 Button(onClick = {
                     rNumber = entryPrice - stopLossPrice
-                    tradeAmount = riskAmount.div(rNumber) * entryPrice
+                    numberOfShares = riskAmount.div(rNumber)
+                    tradeAmount =  entryPrice * numberOfShares
+                    targetPrice = entryPrice + rNumber
                     showResult = true
                 }) {
                     Text("Calculate")
@@ -73,11 +75,15 @@ fun App() {
                         modifier = Modifier.padding(top = 16.dp)
                     )
                     Text(
-                        "1R Target Price: ${entryPrice + rNumber} → Gain : ${riskAmount.div(rNumber)*(entryPrice + rNumber) - tradeAmount}",
+                        "1R Target Price: ${targetPrice} → Gain : ${(numberOfShares*(entryPrice + rNumber) - tradeAmount).div(tradeAmount)*100}%",
                         modifier = Modifier.padding(top = 16.dp)
                     )
                     Text(
-                        "2R Target Price: ${entryPrice + 2*rNumber} → Gain : ${riskAmount.div(rNumber)*(entryPrice + 2*rNumber) - tradeAmount}",
+                        "2R Target Price: ${targetPrice + rNumber} → Gain : ${(numberOfShares*(entryPrice + 2*rNumber) - tradeAmount).div(tradeAmount)*100}%",
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    Text(
+                        "2.4R Target Price: ${targetPrice + 1.4*rNumber} → Gain : ${(numberOfShares*(entryPrice + 2.4*rNumber) - tradeAmount).div(tradeAmount)*100}%",
                         modifier = Modifier.padding(top = 16.dp)
                     )
                 }
